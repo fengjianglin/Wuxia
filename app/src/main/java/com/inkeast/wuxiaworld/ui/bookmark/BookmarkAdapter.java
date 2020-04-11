@@ -17,9 +17,9 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
 
 
     private Context mContext;
-    private List<String> mData;
+    private List<Bookmark> mData;
 
-    public BookmarkAdapter(Context context, List<String> data) {
+    public BookmarkAdapter(Context context, List<Bookmark> data) {
         this.mContext = context;
         this.mData = data;
     }
@@ -34,7 +34,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
     @Override
     public void onBindViewHolder(@NonNull BookmarkViewHolder holder,final int position) {
 
-        holder.textView.setText(mData.get(position));
+        holder.textView.setText(mData.get(position).title);
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

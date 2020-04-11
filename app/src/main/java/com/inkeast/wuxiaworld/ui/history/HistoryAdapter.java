@@ -17,9 +17,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
 
     private Context mContext;
-    private List<String> mData;
+    private List<History> mData;
 
-    public HistoryAdapter(Context context, List<String> data) {
+    public HistoryAdapter(Context context, List<History> data) {
         this.mContext = context;
         this.mData = data;
     }
@@ -34,7 +34,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder,final int position) {
 
-        holder.textView.setText(mData.get(position));
+        holder.textView.setText(mData.get(position).url);
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

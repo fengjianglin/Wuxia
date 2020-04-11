@@ -1,18 +1,23 @@
 package com.inkeast.wuxiaworld;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.inkeast.wuxiaworld.ui.home.HomeFragment;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,8 +64,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_add_bookmark) {
-            Toast.makeText(this, "添加书签", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_bookmark) {
+            List<Fragment> fragments = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment).getChildFragmentManager().getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment instanceof HomeFragment) {
+                    HomeFragment homeFragment = (HomeFragment) fragment;
+                    homeFragment.actionBookmark();
+                    break;
+                }
+            }
         }
         return super.onOptionsItemSelected(item);
     }

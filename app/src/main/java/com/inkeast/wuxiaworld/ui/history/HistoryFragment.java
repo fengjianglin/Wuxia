@@ -12,8 +12,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
+import com.inkeast.wuxiaworld.AppDatabase;
 import com.inkeast.wuxiaworld.R;
+import com.inkeast.wuxiaworld.ui.bookmark.Bookmark;
+import com.inkeast.wuxiaworld.ui.bookmark.BookmarkAdapter;
+import com.inkeast.wuxiaworld.ui.bookmark.BookmarkFragment;
 
 import java.util.List;
 
@@ -21,6 +26,8 @@ public class HistoryFragment extends Fragment {
 
     private HistoryViewModel historyViewModel;
     private RecyclerView mRecyclerView;
+
+    private AppDatabase mAppDatabase;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -33,9 +40,17 @@ public class HistoryFragment extends Fragment {
         historyViewModel.getListData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override
             public void onChanged(@Nullable List<String> list) {
-                mRecyclerView.setAdapter(new HistoryAdapter(HistoryFragment.this.getContext(), list));
+//                mRecyclerView.setAdapter(new HistoryAdapter(HistoryFragment.this.getContext(), list));
             }
         });
+
+        mAppDatabase = Room.databaseBuilder(this.getContext(), AppDatabase.class, "app_database")
+                .allowMainThreadQueries() //数据库中的操作一般不在主线程 这里强行在主线层中进行操作
+                .build();
+        List<History> histories = mAppDatabase.getHistoryDao().loadAllHistories();
+
+        mRecyclerView.setAdapter(new HistoryAdapter(HistoryFragment.this.getContext(), histories));
+
         return root;
     }
 }

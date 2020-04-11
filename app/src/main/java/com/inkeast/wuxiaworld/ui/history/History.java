@@ -1,11 +1,11 @@
-package com.inkeast.wuxiaworld.ui.bookmark;
+package com.inkeast.wuxiaworld.ui.history;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "bookmarks")
-public class Bookmark {
+@Entity(tableName = "histories")
+public class History {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
