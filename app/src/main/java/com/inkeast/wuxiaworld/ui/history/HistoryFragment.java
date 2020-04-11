@@ -27,7 +27,7 @@ public class HistoryFragment extends Fragment {
 
         historyViewModel = new ViewModelProvider(this).get(HistoryViewModel.class);
         View root = inflater.inflate(R.layout.fragment_history, container, false);
-        mRecyclerView = root.findViewById(R.id.recyclerView);
+        mRecyclerView = root.findViewById(R.id.history_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         historyViewModel.getListData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {

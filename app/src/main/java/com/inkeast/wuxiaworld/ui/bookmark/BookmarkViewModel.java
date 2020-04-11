@@ -4,16 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BookmarkViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private MutableLiveData<List<String>> mListData;
 
     public BookmarkViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        List<String> list = new ArrayList<>();
+        for (int i = 50; i < 100; i++) {
+            list.add(i + "........." + i);
+        }
+        mListData = new MutableLiveData<>();
+        mListData.setValue(list);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<String>> getListData() {
+        return mListData;
     }
 }
