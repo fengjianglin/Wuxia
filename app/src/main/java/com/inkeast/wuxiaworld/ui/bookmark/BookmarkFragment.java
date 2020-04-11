@@ -30,7 +30,7 @@ public class BookmarkFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_history, container, false);
+        View root = inflater.inflate(R.layout.fragment_bookmark, container, false);
         mRecyclerView = root.findViewById(R.id.bookmark_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
