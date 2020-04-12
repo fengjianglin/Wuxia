@@ -3,6 +3,9 @@ package com.inkeast.wuxiaworld.ui.history;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,8 +58,22 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnItemCl
         });
         mRecyclerView.setAdapter(mHistoryAdapter);
         mHistoryAdapter.notifyDataSetChanged();
-
+        setHasOptionsMenu(true);
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_history_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.action_clear_histories == item.getItemId()) {
+            removeAllHistories();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void removeAllHistories() {
@@ -68,13 +85,13 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnItemCl
                 mHistories.clear();
                 mHistoryAdapter.notifyDataSetChanged();
             }
-        }).setNegativeButton("No",null).create().show();
+        }).setNegativeButton("No", null).create().show();
     }
 
     @Override
     public void onItemClick(History history) {
         FragmentActivity activity = getActivity();
-        if(activity instanceof MainActivity) {
+        if (activity instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) activity;
             mainActivity.navigateToHome(history.url);
         }
@@ -90,7 +107,7 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnItemCl
                 mHistories.remove(history);
                 mHistoryAdapter.notifyDataSetChanged();
             }
-        }).setNegativeButton("No",null).create().show();
+        }).setNegativeButton("No", null).create().show();
         return true;
     }
 }

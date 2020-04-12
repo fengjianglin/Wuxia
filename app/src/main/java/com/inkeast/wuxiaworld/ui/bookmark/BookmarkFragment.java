@@ -3,6 +3,9 @@ package com.inkeast.wuxiaworld.ui.bookmark;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -56,8 +59,22 @@ public class BookmarkFragment extends Fragment implements BookmarkAdapter.OnItem
         });
         mRecyclerView.setAdapter(mBookmarkAdapter);
         mBookmarkAdapter.notifyDataSetChanged();
-
+        setHasOptionsMenu(true);
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_bookmark_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.action_clear_bookmarks == item.getItemId()) {
+            removeAllBookmarks();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void removeAllBookmarks() {
