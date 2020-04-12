@@ -13,19 +13,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.room.Room;
 
-import com.inkeast.wuxiaworld.AppDatabase;
+import com.inkeast.wuxiaworld.MainApplication;
 import com.inkeast.wuxiaworld.R;
-import com.inkeast.wuxiaworld.ui.bookmark.Bookmark;
-import com.inkeast.wuxiaworld.ui.history.History;
+import com.inkeast.wuxiaworld.database.Bookmark;
+import com.inkeast.wuxiaworld.database.History;
 
 public class HomeFragment extends Fragment {
 
     private String url = "https://inkeast.com";
 
     private WebView mWebView;
-    private AppDatabase mAppDatabase;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,7 +40,7 @@ public class HomeFragment extends Fragment {
 
                 History history = new History();
                 history.url = view.getUrl();
-                mAppDatabase.getHistoryDao().insertHistories(history);
+                MainApplication.getDatabase().getHistoryDao().insertHistories(history);
 
                 return super.shouldOverrideUrlLoading(view, request);
             }
@@ -62,11 +60,6 @@ public class HomeFragment extends Fragment {
                 return view.onKeyDown(keyCode, keyEvent);
             }
         });
-
-        mAppDatabase = Room.databaseBuilder(this.getContext(), AppDatabase.class, "app_database")
-                .allowMainThreadQueries() //数据库中的操作一般不在主线程 这里强行在主线层中进行操作
-                .build();
-
         return root;
     }
 
@@ -74,8 +67,7 @@ public class HomeFragment extends Fragment {
         Bookmark bookmark = new Bookmark();
         bookmark.title = mWebView.getTitle();
         bookmark.url = mWebView.getUrl();
-        mAppDatabase.getBookmarkDao().insertBookmarks(bookmark);
+        MainApplication.getDatabase().getBookmarkDao().insertBookmarks(bookmark);
         Toast.makeText(this.getContext(), "添加书签成功", Toast.LENGTH_SHORT).show();
     }
-
 }

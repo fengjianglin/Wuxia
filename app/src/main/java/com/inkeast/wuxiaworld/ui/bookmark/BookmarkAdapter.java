@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.inkeast.wuxiaworld.R;
+import com.inkeast.wuxiaworld.database.Bookmark;
 
 import java.util.List;
 

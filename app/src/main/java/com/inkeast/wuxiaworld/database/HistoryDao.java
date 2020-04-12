@@ -1,4 +1,4 @@
-package com.inkeast.wuxiaworld.ui.history;
+package com.inkeast.wuxiaworld.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

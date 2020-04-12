@@ -1,4 +1,4 @@
-package com.inkeast.wuxiaworld.ui.history;
+package com.inkeast.wuxiaworld.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

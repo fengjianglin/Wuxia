@@ -10,16 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
-import com.inkeast.wuxiaworld.AppDatabase;
+import com.inkeast.wuxiaworld.MainApplication;
 import com.inkeast.wuxiaworld.R;
+import com.inkeast.wuxiaworld.database.History;
 
 import java.util.List;
 
 public class HistoryFragment extends Fragment {
 
-    private AppDatabase mAppDatabase;
     private RecyclerView mRecyclerView;
     private HistoryAdapter mHistoryAdapter;
     private List<History> mHistories;
@@ -31,10 +30,7 @@ public class HistoryFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
-        mAppDatabase = Room.databaseBuilder(this.getContext(), AppDatabase.class, "app_database")
-                .allowMainThreadQueries() //数据库中的操作一般不在主线程 这里允许在主线层中进行操作
-                .build();
-        mHistories = mAppDatabase.getHistoryDao().loadAllHistories();
+        mHistories = MainApplication.getDatabase().getHistoryDao().loadAllHistories();
         mHistoryAdapter = new HistoryAdapter(HistoryFragment.this.getContext(), mHistories);
         mHistoryAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -58,7 +54,7 @@ public class HistoryFragment extends Fragment {
     }
 
     public void removeAllHistories() {
-        mAppDatabase.getHistoryDao().deleteAll();
+        MainApplication.getDatabase().getHistoryDao().deleteAll();
         mHistories.clear();
         mHistoryAdapter.notifyDataSetChanged();
     }
