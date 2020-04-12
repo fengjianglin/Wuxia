@@ -14,6 +14,9 @@ public interface BookmarkDao {
     @Query("SELECT * FROM bookmarks ORDER BY id DESC")
     List<Bookmark> loadAllBookmarks();
 
+    @Query("SELECT * FROM bookmarks where url = :url")
+    List<Bookmark> loadBookmarksByUrl(String url);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertBookmarks(Bookmark... bookmarks);
 

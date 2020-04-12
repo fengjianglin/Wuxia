@@ -1,6 +1,7 @@
 package com.inkeast.wuxiaworld.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.inkeast.wuxiaworld.MainApplication;
 import com.inkeast.wuxiaworld.R;
 import com.inkeast.wuxiaworld.database.Bookmark;
 import com.inkeast.wuxiaworld.database.History;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -45,16 +48,13 @@ public class HomeFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-
-                History history = new History();
-                history.url = view.getUrl();
-                MainApplication.getDatabase().getHistoryDao().insertHistories(history);
-
+                HomeFragment.this.shouldOverrideUrlLoading(view, request);
                 return super.shouldOverrideUrlLoading(view, request);
             }
         });
 
         mWebView.loadUrl(url);
+        measureBookmarks(url);
 
         mWebView.setFocusable(true);
         mWebView.setFocusableInTouchMode(true);
@@ -69,6 +69,24 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    private void shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        Log.e("url", request.getUrl().toString());
+        History history = new History();
+        history.url = request.getUrl().toString();
+        MainApplication.getDatabase().getHistoryDao().insertHistories(history);
+        measureBookmarks(history.url);
+    }
+
+    private void measureBookmarks(String url) {
+        List<Bookmark> bookmarks = MainApplication.getDatabase().getBookmarkDao().loadBookmarksByUrl(url);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (bookmarks != null && bookmarks.size() > 0) {  // 存在书签
+            mainActivity.setMenuIcon(R.id.action_bookmark, R.drawable.ic_bookmark_black_24dp);
+        } else { //不存在书签
+            mainActivity.setMenuIcon(R.id.action_bookmark, R.drawable.ic_bookmark_border_black_24dp);
+        }
     }
 
     public void actionBookmark() {

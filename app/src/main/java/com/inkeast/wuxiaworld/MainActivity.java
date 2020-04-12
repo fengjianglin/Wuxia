@@ -1,6 +1,7 @@
 package com.inkeast.wuxiaworld;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,7 +24,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String HOME_URL = "https://inkeast.com";
+    public static final String HOME_URL = "https://inkeast.com/";
 
     private NavController mNavController;
     private Menu mMenu;
@@ -55,11 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 return NavigationUI.onNavDestinationSelected(item, mNavController);
             }
         });
-    }
-
-    public void navigateToHome() {
-        mNavController.navigate(R.id.navigation_home);
-        showMenu(R.id.navigation_home);
     }
 
     public void navigateToHome(String url) {
@@ -100,6 +96,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setMenuIcon(int menuItemId, int iconId) {
+        Log.e("setMenuIcon", "setMenuIcon");
+        if (null != mMenu) {
+            Log.e("setMenuIcon", "22222");
+            for (int i = 0; i < mMenu.size(); i++) {
+                MenuItem item = mMenu.getItem(i);
+                if (item.getItemId() == menuItemId) {
+                    item.setIcon(iconId);
+                }
+            }
+        }
     }
 
     private void showMenu(int navigationId) {
