@@ -22,37 +22,50 @@ import java.util.List;
 
 public class BookmarkFragment extends Fragment {
 
-    private BookmarkViewModel bookmarkViewModel;
-    private RecyclerView mRecyclerView;
-
     private AppDatabase mAppDatabase;
+    private RecyclerView mRecyclerView;
+    private BookmarkAdapter mBookmarkAdapter;
+    private List<Bookmark> mBookmarks;
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_bookmark, container, false);
+        final View root = inflater.inflate(R.layout.fragment_bookmark, container, false);
         mRecyclerView = root.findViewById(R.id.bookmark_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
-        bookmarkViewModel.getListData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        mAppDatabase = Room.databaseBuilder(this.getContext(), AppDatabase.class, "app_database")
+                .allowMainThreadQueries() // 数据库中的操作一般不在主线程,这里允许在主线层中进行操作
+                .build();
+        mBookmarks = mAppDatabase.getBookmarkDao().loadAllBookmarks();
+
+        mBookmarkAdapter = new BookmarkAdapter(BookmarkFragment.this.getContext(), mBookmarks);
+        mBookmarkAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onChanged(@Nullable List<String> list) {
-//                mRecyclerView.setAdapter(new BookmarkAdapter(BookmarkFragment.this.getContext(), list));
+            public void onChanged() {
+                View emptyView = root.findViewById(android.R.id.empty);
+                if (emptyView != null) {
+                    if (mBookmarkAdapter.getItemCount() == 0) {
+                        emptyView.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyView.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
-
-        mAppDatabase = Room.databaseBuilder(this.getContext(), AppDatabase.class, "app_database")
-                .allowMainThreadQueries() //数据库中的操作一般不在主线程 这里强行在主线层中进行操作
-                .build();
-
-        List<Bookmark> bookmarks = mAppDatabase.getBookmarkDao().loadAllBookmarks();
-        mRecyclerView.setAdapter(new BookmarkAdapter(BookmarkFragment.this.getContext(), bookmarks));
+        mRecyclerView.setAdapter(mBookmarkAdapter);
+        mBookmarkAdapter.notifyDataSetChanged();
 
         return root;
     }
 
     public void removeAllBookmarks() {
         mAppDatabase.getBookmarkDao().deleteAll();
+        mBookmarks.clear();
+        mBookmarkAdapter.notifyDataSetChanged();
     }
 }
