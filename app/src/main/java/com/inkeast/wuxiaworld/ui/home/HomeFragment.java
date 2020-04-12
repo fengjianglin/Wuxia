@@ -1,7 +1,6 @@
 package com.inkeast.wuxiaworld.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -64,7 +63,7 @@ public class HomeFragment extends Fragment {
         mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && mWebView.canGoBack()) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP && mWebView.canGoBack()) {
                     mWebView.goBack();
                     return true;
                 }
@@ -92,7 +91,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-        Log.e("url", request.getUrl().toString());
         History history = new History();
         history.url = request.getUrl().toString();
         MainApplication.getDatabase().getHistoryDao().insertHistories(history);
