@@ -59,12 +59,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void navigateToHome() {
         mNavController.navigate(R.id.navigation_home);
+        showMenu(R.id.navigation_home);
     }
 
     public void navigateToHome(String url) {
         Bundle bundle = new Bundle();
         bundle.putString("url", url);
         mNavController.navigate(R.id.navigation_home, bundle);
+        showMenu(R.id.navigation_home);
     }
 
     @Override

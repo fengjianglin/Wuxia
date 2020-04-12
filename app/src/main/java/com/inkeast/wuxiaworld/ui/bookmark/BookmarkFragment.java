@@ -8,10 +8,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.inkeast.wuxiaworld.MainActivity;
 import com.inkeast.wuxiaworld.MainApplication;
 import com.inkeast.wuxiaworld.R;
 import com.inkeast.wuxiaworld.database.Bookmark;
@@ -65,7 +67,11 @@ public class BookmarkFragment extends Fragment implements BookmarkAdapter.OnItem
 
     @Override
     public void onItemClick(Bookmark bookmark) {
-        Toast.makeText(this.getContext(), bookmark + " onItemClick", Toast.LENGTH_SHORT).show();
+        FragmentActivity activity = getActivity();
+        if(activity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.navigateToHome(bookmark.url);
+        }
     }
 
     @Override
