@@ -22,6 +22,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private Context mContext;
     private List<History> mData;
 
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
+
     public HistoryAdapter(Context context, List<History> data) {
         this.mContext = context;
         this.mData = data;
@@ -44,6 +47,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return mData.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.mOnItemLongClickListener = onItemLongClickListener;
+    }
+
     class HistoryViewHolder extends RecyclerView.ViewHolder {
 
         public HistoryViewHolder(View itemView) {
@@ -55,16 +66,28 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, history + " onClick", Toast.LENGTH_SHORT).show();
+                    if(mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(history);
+                    }
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Toast.makeText(mContext, history + " onLongClick", Toast.LENGTH_SHORT).show();
-                    return true;
+                    if(mOnItemLongClickListener !=null) {
+                        return mOnItemLongClickListener.onItemLongClick(history);
+                    }
+                    return false;
                 }
             });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(History history);
+    }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClick(History history);
     }
 }

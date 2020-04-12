@@ -30,7 +30,6 @@ public class HomeFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             url = bundle.getString("url");
-            Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
         }
         if (url == null) {
             url = MainActivity.HOME_URL;

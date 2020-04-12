@@ -7,17 +7,19 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.inkeast.wuxiaworld.MainActivity;
 import com.inkeast.wuxiaworld.MainApplication;
 import com.inkeast.wuxiaworld.R;
 import com.inkeast.wuxiaworld.database.History;
 
 import java.util.List;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements HistoryAdapter.OnItemClickListener, HistoryAdapter.OnItemLongClickListener {
 
     private RecyclerView mRecyclerView;
     private HistoryAdapter mHistoryAdapter;
@@ -32,6 +34,8 @@ public class HistoryFragment extends Fragment {
 
         mHistories = MainApplication.getDatabase().getHistoryDao().loadAllHistories();
         mHistoryAdapter = new HistoryAdapter(HistoryFragment.this.getContext(), mHistories);
+        mHistoryAdapter.setOnItemClickListener(this);
+        mHistoryAdapter.setOnItemLongClickListener(this);
         mHistoryAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -57,5 +61,19 @@ public class HistoryFragment extends Fragment {
         MainApplication.getDatabase().getHistoryDao().deleteAll();
         mHistories.clear();
         mHistoryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(History history) {
+        FragmentActivity activity = getActivity();
+        if(activity instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.navigateToHome(history.url);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(History history) {
+        return true;
     }
 }
