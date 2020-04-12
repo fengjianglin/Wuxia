@@ -1,12 +1,13 @@
 package com.inkeast.wuxiaworld.ui.bookmark;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -60,9 +61,15 @@ public class BookmarkFragment extends Fragment implements BookmarkAdapter.OnItem
     }
 
     public void removeAllBookmarks() {
-        MainApplication.getDatabase().getBookmarkDao().deleteAll();
-        mBookmarks.clear();
-        mBookmarkAdapter.notifyDataSetChanged();
+        new AlertDialog.Builder(this.getContext()).setIcon(R.drawable.ic_delete_forever_black_24dp).setTitle("Clear Bookmarks")
+                .setMessage("Do you want to clear all bookmarks ?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MainApplication.getDatabase().getBookmarkDao().deleteAll();
+                mBookmarks.clear();
+                mBookmarkAdapter.notifyDataSetChanged();
+            }
+        }).setNegativeButton("No",null).create().show();
     }
 
     @Override
@@ -75,8 +82,16 @@ public class BookmarkFragment extends Fragment implements BookmarkAdapter.OnItem
     }
 
     @Override
-    public boolean onItemLongClick(Bookmark bookmark) {
-        Toast.makeText(this.getContext(), bookmark + " onItemLongClick", Toast.LENGTH_SHORT).show();
+    public boolean onItemLongClick(final Bookmark bookmark) {
+        new AlertDialog.Builder(this.getContext()).setIcon(R.drawable.ic_delete_forever_black_24dp).setTitle("Delete Bookmark")
+                .setMessage("Do you want to delete this bookmark ?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MainApplication.getDatabase().getBookmarkDao().deleteBookmarks(bookmark);
+                mBookmarks.remove(bookmark);
+                mBookmarkAdapter.notifyDataSetChanged();
+            }
+        }).setNegativeButton("No",null).create().show();
         return true;
     }
 }

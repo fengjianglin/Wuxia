@@ -1,11 +1,13 @@
 package com.inkeast.wuxiaworld.ui.history;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -58,9 +60,15 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnItemCl
     }
 
     public void removeAllHistories() {
-        MainApplication.getDatabase().getHistoryDao().deleteAll();
-        mHistories.clear();
-        mHistoryAdapter.notifyDataSetChanged();
+        new AlertDialog.Builder(this.getContext()).setIcon(R.drawable.ic_delete_forever_black_24dp).setTitle("Clear Historic Records")
+                .setMessage("Do you want to clear all historic records ?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MainApplication.getDatabase().getHistoryDao().deleteAll();
+                mHistories.clear();
+                mHistoryAdapter.notifyDataSetChanged();
+            }
+        }).setNegativeButton("No",null).create().show();
     }
 
     @Override
@@ -73,7 +81,16 @@ public class HistoryFragment extends Fragment implements HistoryAdapter.OnItemCl
     }
 
     @Override
-    public boolean onItemLongClick(History history) {
+    public boolean onItemLongClick(final History history) {
+        new AlertDialog.Builder(this.getContext()).setIcon(R.drawable.ic_delete_forever_black_24dp).setTitle("Delete Historic Record")
+                .setMessage("Do you want to delete this historic record ?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                MainApplication.getDatabase().getHistoryDao().deleteHistories(history);
+                mHistories.remove(history);
+                mHistoryAdapter.notifyDataSetChanged();
+            }
+        }).setNegativeButton("No",null).create().show();
         return true;
     }
 }
