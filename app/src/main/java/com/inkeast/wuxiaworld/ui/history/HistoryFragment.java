@@ -55,4 +55,8 @@ public class HistoryFragment extends Fragment {
 
         return root;
     }
+
+    public void removeAllHistories() {
+        mAppDatabase.getHistoryDao().deleteAll();
+    }
 }

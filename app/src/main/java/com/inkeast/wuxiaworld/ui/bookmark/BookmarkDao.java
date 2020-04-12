@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface BookmarkDao {
 
-    @Query("SELECT * FROM bookmarks")
+    @Query("SELECT * FROM bookmarks ORDER BY id DESC")
     List<Bookmark> loadAllBookmarks();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,4 +20,6 @@ public interface BookmarkDao {
     @Delete
     void deleteBookmarks(Bookmark... bookmarks);
 
+    @Query("DELETE FROM bookmarks")
+    void deleteAll();
 }

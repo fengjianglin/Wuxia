@@ -51,4 +51,8 @@ public class BookmarkFragment extends Fragment {
 
         return root;
     }
+
+    public void removeAllBookmarks() {
+        mAppDatabase.getBookmarkDao().deleteAll();
+    }
 }

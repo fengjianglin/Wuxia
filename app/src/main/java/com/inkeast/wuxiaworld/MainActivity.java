@@ -13,6 +13,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.inkeast.wuxiaworld.ui.bookmark.BookmarkFragment;
+import com.inkeast.wuxiaworld.ui.history.HistoryFragment;
 import com.inkeast.wuxiaworld.ui.home.HomeFragment;
 
 import java.util.HashMap;
@@ -62,15 +64,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_bookmark) {
-            List<Fragment> fragments = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment).getChildFragmentManager().getFragments();
-            for (Fragment fragment : fragments) {
-                if (fragment != null && fragment instanceof HomeFragment) {
-                    HomeFragment homeFragment = (HomeFragment) fragment;
-                    homeFragment.actionBookmark();
+        List<Fragment> fragments = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment).getChildFragmentManager().getFragments();
+        for (Fragment fragment : fragments) {
+            switch (item.getItemId()) {
+                case R.id.action_bookmark:
+                    if (fragment != null && fragment instanceof HomeFragment) {
+                        ((HomeFragment) fragment).actionBookmark();
+                    }
                     break;
-                }
+                case R.id.action_clear_bookmarks:
+                    if (fragment != null && fragment instanceof BookmarkFragment) {
+                        ((BookmarkFragment) fragment).removeAllBookmarks();
+                    }
+                    break;
+                case R.id.action_clear_histories:
+                    if (fragment != null && fragment instanceof HistoryFragment) {
+                        ((HistoryFragment) fragment).removeAllHistories();
+                    }
+                    break;
             }
         }
         return super.onOptionsItemSelected(item);

@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface HistoryDao {
 
-    @Query("SELECT * FROM histories")
+    @Query("SELECT * FROM histories ORDER BY id DESC")
     List<History> loadAllHistories();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -19,5 +19,8 @@ public interface HistoryDao {
 
     @Delete
     void deleteHistories(History... histories);
+
+    @Query("DELETE FROM histories")
+    void deleteAll();
 
 }
