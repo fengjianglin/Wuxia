@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -32,6 +33,7 @@ public class BookmarkFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_bookmark, container, false);
         mRecyclerView = root.findViewById(R.id.bookmark_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
         bookmarkViewModel.getListData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
             @Override

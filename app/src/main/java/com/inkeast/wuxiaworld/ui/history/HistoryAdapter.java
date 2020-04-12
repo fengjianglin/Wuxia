@@ -11,6 +11,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.inkeast.wuxiaworld.R;
+import com.inkeast.wuxiaworld.ui.bookmark.Bookmark;
+
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
@@ -27,27 +30,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.history_item, parent, false);
         return new HistoryViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HistoryViewHolder holder,final int position) {
-
-        holder.textView.setText(mData.get(position).url);
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext,mData.get(position) + " onClick", Toast.LENGTH_SHORT).show();
-            }
-        });
-        holder.textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(mContext,mData.get(position) + " onLongClick", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+    public void onBindViewHolder(@NonNull HistoryViewHolder holder, final int position) {
+        holder.setData(mData.get(position));
     }
 
     @Override
@@ -57,11 +46,25 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
-
         public HistoryViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(android.R.id.text1);
+        }
+
+        public void setData(final History history) {
+            ((TextView) itemView.findViewById(android.R.id.title)).setText(history.url);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext, history + " onClick", Toast.LENGTH_SHORT).show();
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Toast.makeText(mContext, history + " onLongClick", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
         }
     }
 }
