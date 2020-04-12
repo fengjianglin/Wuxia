@@ -1,10 +1,8 @@
 package com.inkeast.wuxiaworld;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,11 +15,21 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.inkeast.wuxiaworld.ui.home.HomeFragment;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private Menu mMenu;
+
+    private Map<Integer, Integer> mNavTopMap = new HashMap<>();
+
+    {
+        mNavTopMap.put(R.id.navigation_home, R.id.action_bookmark);
+        mNavTopMap.put(R.id.navigation_bookmark, R.id.action_clear_bookmarks);
+        mNavTopMap.put(R.id.navigation_history, R.id.action_clear_histories);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +46,7 @@ public class MainActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        showMenu();
-                        break;
-                    case R.id.navigation_bookmark:
-                        hiddenMenu();
-                        break;
-                    case R.id.navigation_history:
-                        hiddenMenu();
-                        break;
-                }
+                showMenu(item.getItemId());
                 return NavigationUI.onNavDestinationSelected(item, navController);
             }
         });
@@ -58,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.tool_bar_menu, menu);
+        showMenu(R.id.navigation_home);
         return true;
     }
 
@@ -77,18 +76,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void hiddenMenu() {
+    private void showMenu(int navigationId) {
+        int menuItemId = mNavTopMap.get(navigationId);
         if (null != mMenu) {
             for (int i = 0; i < mMenu.size(); i++) {
-                mMenu.getItem(i).setVisible(false);
-            }
-        }
-    }
-
-    private void showMenu() {
-        if (null != mMenu) {
-            for (int i = 0; i < mMenu.size(); i++) {
-                mMenu.getItem(i).setVisible(true);
+                MenuItem item = mMenu.getItem(i);
+                if (item.getItemId() == menuItemId) {
+                    item.setVisible(true);
+                } else {
+                    item.setVisible(false);
+                }
             }
         }
     }
