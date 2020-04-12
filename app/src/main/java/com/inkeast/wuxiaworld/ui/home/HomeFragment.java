@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.inkeast.wuxiaworld.MainActivity;
 import com.inkeast.wuxiaworld.MainApplication;
 import com.inkeast.wuxiaworld.R;
 import com.inkeast.wuxiaworld.database.Bookmark;
@@ -21,11 +22,19 @@ import com.inkeast.wuxiaworld.database.History;
 
 public class HomeFragment extends Fragment {
 
-    private String url = "https://inkeast.com";
-
     private WebView mWebView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        String url = null;
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            url = bundle.getString("url");
+            Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+        }
+        if (url == null) {
+            url = MainActivity.HOME_URL;
+        }
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mWebView = root.findViewById(R.id.webview);
