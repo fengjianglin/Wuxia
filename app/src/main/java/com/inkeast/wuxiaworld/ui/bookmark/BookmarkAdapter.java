@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,9 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
 
     private Context mContext;
     private List<Bookmark> mData;
+
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     public BookmarkAdapter(Context context, List<Bookmark> data) {
         this.mContext = context;
@@ -44,6 +48,14 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         return mData.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.mOnItemLongClickListener = onItemLongClickListener;
+    }
+
     class BookmarkViewHolder extends RecyclerView.ViewHolder {
 
         public BookmarkViewHolder(View itemView) {
@@ -57,16 +69,28 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, bookmark + " onClick", Toast.LENGTH_SHORT).show();
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(bookmark);
+                    }
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Toast.makeText(mContext, bookmark + " onLongClick", Toast.LENGTH_SHORT).show();
-                    return true;
+                    if(mOnItemLongClickListener != null) {
+                        return mOnItemLongClickListener.onItemLongClick(bookmark);
+                    }
+                    return false;
                 }
             });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Bookmark bookmark);
+    }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClick(Bookmark bookmark);
     }
 }

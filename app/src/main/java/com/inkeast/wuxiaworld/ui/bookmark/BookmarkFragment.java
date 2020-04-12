@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,7 @@ import com.inkeast.wuxiaworld.database.Bookmark;
 
 import java.util.List;
 
-public class BookmarkFragment extends Fragment {
+public class BookmarkFragment extends Fragment implements BookmarkAdapter.OnItemClickListener, BookmarkAdapter.OnItemLongClickListener {
 
     private RecyclerView mRecyclerView;
     private BookmarkAdapter mBookmarkAdapter;
@@ -33,6 +34,8 @@ public class BookmarkFragment extends Fragment {
         mBookmarks = MainApplication.getDatabase().getBookmarkDao().loadAllBookmarks();
 
         mBookmarkAdapter = new BookmarkAdapter(BookmarkFragment.this.getContext(), mBookmarks);
+        mBookmarkAdapter.setOnItemClickListener(this);
+        mBookmarkAdapter.setOnItemLongClickListener(this);
         mBookmarkAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -58,5 +61,16 @@ public class BookmarkFragment extends Fragment {
         MainApplication.getDatabase().getBookmarkDao().deleteAll();
         mBookmarks.clear();
         mBookmarkAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(Bookmark bookmark) {
+        Toast.makeText(this.getContext(), bookmark + " onItemClick", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onItemLongClick(Bookmark bookmark) {
+        Toast.makeText(this.getContext(), bookmark + " onItemLongClick", Toast.LENGTH_SHORT).show();
+        return true;
     }
 }
